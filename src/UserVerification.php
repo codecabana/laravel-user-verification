@@ -16,6 +16,7 @@ use Jrean\UserVerification\Exceptions\ModelNotCompliantException;
 use Jrean\UserVerification\Exceptions\UserNotFoundException;
 use Jrean\UserVerification\Exceptions\UserIsVerifiedException;
 use Jrean\UserVerification\Exceptions\TokenMismatchException;
+use Carbon\Carbon;
 
 class UserVerification
 {
@@ -311,11 +312,14 @@ class UserVerification
      */
     protected function updateUser($user)
     {
+        $cur_time = Carbon::now()->toDateTimeString();
+
         DB::table($user->table)
             ->where('email', $user->email)
             ->update([
                 'verification_token' => $user->verification_token,
-                'verified' => $user->verified
+                'verified' => $user->verified,
+                'verified_at' => $cur_time
             ]);
     }
 
